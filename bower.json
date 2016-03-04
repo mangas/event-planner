@@ -1,0 +1,22 @@
+{
+  "name": "EventPlanner",
+  "description": "A starter project for AngularJS",
+  "version": "0.0.0",
+  "homepage": "https://github.com/angular/angular-seed",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "angular": "~1.4.0",
+    "angular-route": "~1.4.0",
+    "angular-loader": "~1.4.0",
+    "angular-mocks": "~1.4.0",
+    "webcomponentsjs": "^0.7.21",
+    "angular-material": "^1.0.6",
+    "jshashes": "^1.0.5",
+    "angular-material-datetimepicker": "^1.3.1"
+  },
+  "resolutions": {
+    "angular": "1.5.0",
+    "angular-material": "^1.0.6"
+  }
+}

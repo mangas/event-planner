@@ -1,0 +1,80 @@
+<div layout="column" ng-cloak="" class="md-inline-form">
+
+    <md-content layout-padding>
+        <md-card flex="100" layout-padding="">
+            <md-card-header-text>
+                <span class="md-title">User Details</span>
+            </md-card-header-text>
+        </md-card>
+
+        <md-card>
+            <form name="userForm" autocomplete="on">
+                <md-card-content>
+                    <div layout-gt-sm="row">
+                        <md-input-container>
+                            <label>First Name</label>
+                            <input ng-model="user.firstName" required>
+                        </md-input-container>
+
+                        <md-input-container>
+                            <label>Last Name</label>
+                            <input ng-model="user.lastName" required>
+                        </md-input-container>
+                    </div>
+
+                    <div layout-gt-xs="row">
+                        <md-input-container>
+                            <label>Email</label>
+                            <input ng-model="user.email" type="email" required>
+                        </md-input-container>
+                    </div>
+
+                    <div layout-gt-xs="row" ng-if="!isEdit()">
+                        <md-input-container>
+                            <label>Password</label>
+                            <input name="password" ng-model="user.password" type="password" ng-change="verifyPassword()"
+                                   required>
+                            <div ng-messages="userForm.password.$error" ng-show="userForm.password.$dirty">
+                                <div ng-message="match">The passwords do not match</div>
+                                <div ng-message="symbol">Password doesnt have a symbol</div>
+                                <div ng-message="number">Password needs at least a number</div>
+                                <div ng-message="lowercase">Please add some lowercase characters</div>
+                                <div ng-message="uppercase">Please add some uppercase characters</div>
+                                <div ng-message="minLength">The minimum length was not met</div>
+                                <div ng-message="maxLength">Password exceeds the maximum length</div>
+                            </div>
+                        </md-input-container>
+                        <md-input-container>
+                            <label>Repeat Password</label>
+                            <input name="cpassword" ng-model="user.cpassword" type="password"
+                                   ng-change="verifyPassword()" required>
+                        </md-input-container>
+                    </div>
+
+                    <dev layout="row">
+                        <md-input-container class="md-input-has-placeholder">
+                            <label>Birthday (Optional)</label>
+                            <input mdc-datetime-picker="" date="true" time="false" type="text"
+                                   placeholder="Birthday" max-date="Date.today()" ng-model="user.details.birthday"
+                                   format="YYYY-MM-DD" class=" md-input">
+                        </md-input-container>
+
+                        <md-input-container>
+                            <label>Job Title (Optional)</label>
+                            <input ng-model="user.details.jobTitle">
+                        </md-input-container>
+                        <md-input-container>
+                            <label>Employer (Optional)</label>
+                            <input ng-model="user.details.employer">
+                        </md-input-container>
+                    </dev>
+                </md-card-content>
+                <md-card-actions layout="row" layout-align="start center">
+                    <md-button type="submit" ng-click="submitForm()">Save</md-button>
+                    <md-button type="reset" ng-href="#/users">Cancel</md-button>
+                </md-card-actions>
+            </form>
+</div>
+</md-content>
+
+</div>
