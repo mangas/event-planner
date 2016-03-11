@@ -11,13 +11,13 @@
                 <md-card-content>
                     <div layout-gt-sm="row">
                         <md-input-container>
-                            <label>Event Name</label>
-                            <input ng-model="event.name" required>
+                            <label for="event-name" >Event Name</label>
+                            <input id='event-name' ng-model="event.name" type="text" required>
                         </md-input-container>
 
                         <md-input-container>
-                            <label>Event Type</label>
-                            <input list="dl" ng-model="event.type" required>
+                            <label for="event-type">Event Type</label>
+                            <input id="event-type" list="dl" ng-model="event.type" required>
                             <datalist id="dl" ng-repeat="eventType in eventTypes">
                                 <option value="{{ eventType }}"></option>
                             </datalist>
@@ -26,45 +26,46 @@
 
                     <div layout-gt-sm="row">
                         <md-input-container>
-                            <label>Event Host</label>
-                            <input ng-model="event.host" required>
+                            <label for="event-host">Event Host</label>
+                            <input id='event-host' type="text" ng-model="event.host" required>
                         </md-input-container>
                     </div>
 
                     <div class="range layout-column flex-gt-md-30">
                         <md-input-container class="md-input-has-placeholder">
-                            <label>Start Date/Time</label>
+                            <label for="startdate">Start Date/Time</label>
                             <input mdc-datetime-picker="" date="true" time="true" type="text"
                                    placeholder="Start" max-date="dateTimeEnd" ng-model="event.dateTimeStart"
                                    class=" md-input"
-                                   id="input_0">
+                                   id="startdate">
                         </md-input-container>
                         <md-input-container class="md-input-has-placeholder">
-                            <label>End Date/Time</label>
+                            <label for="enddate" >End Date/Time</label>
                             <input mdc-datetime-picker="" date="true" time="true" type="text"
                                    placeholder="End" min-date="event.dateTimeStart" ng-model="event.dateTimeEnd"
-                                   class=" md-input" id="input_1">
+                                   class=" md-input" id="enddate">
                         </md-input-container>
                     </div>
 
                     <md-input-container class="md-block">
-                        <label>Address</label>
-                        <input ng-model="event.location.address1" required>
+                        <label for="address" >Address</label>
+                        <input id="address" ng-model="event.location.address1" required>
                     </md-input-container>
 
                     <md-input-container md-no-float="" class="md-block">
-                        <input ng-model="event.location.address2" placeholder="Address 2(Optional)">
+                        <label for="address2" >Address2</label>
+                        <input id="address2" ng-model="event.location.address2" placeholder="Address 2(Optional)">
                     </md-input-container>
 
                     <div layout-gt-sm="row">
                         <md-input-container class="md-block" flex-gt-sm="">
-                            <label>City</label>
-                            <input ng-model="event.location.city">
+                            <label for="city" >City</label>
+                            <input id="city" ng-model="event.location.city">
                         </md-input-container>
 
                         <md-input-container class="md-block" flex-gt-sm="">
-                            <label>Postal Code</label>
-                            <input name="postalCode" ng-model="event.location.postalCode" required>
+                            <label for="postcode" >Postal Code</label>
+                            <input id="postcode" name="postalCode" ng-model="event.location.postalCode" required>
 
                             <div ng-messages="userForm.postalCode.$error" role="alert" multiple="">
                                 <div ng-message="required" class="my-message">You must supply a postal code.</div>
@@ -73,8 +74,8 @@
                     </div>
 
                     <md-input-container class="md-block">
-                        <label>Message</label>
-                        <textarea ng-model="event.message" md-maxlength="150" rows="5" md-select-on-focus=""></textarea>
+                        <label id="message">Message</label>
+                        <textarea id="message" ng-model="event.message" md-maxlength="150" rows="5" md-select-on-focus=""></textarea>
                     </md-input-container>
                 </md-card-content>
                 <md-card-actions layout="row" layout-align="start center">
