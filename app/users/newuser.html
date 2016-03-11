@@ -8,7 +8,7 @@
         </md-card>
 
         <md-card>
-            <form name="userForm" autocomplete="on">
+            <form name="userForm" ng-submit="submitForm()" autocomplete="on">
                 <md-card-content>
                     <div layout-gt-sm="row">
                         <md-input-container>
@@ -70,7 +70,7 @@
                     </dev>
                 </md-card-content>
                 <md-card-actions layout="row" layout-align="start center">
-                    <md-button type="submit" ng-click="submitForm()">Save</md-button>
+                    <md-button type="submit">Save</md-button>
                     <md-button type="reset" ng-href="#/users">Cancel</md-button>
                 </md-card-actions>
             </form>

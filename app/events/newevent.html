@@ -7,7 +7,7 @@
             </md-card-header-text>
         </md-card>
         <md-card>
-            <form name="eventForm" autocomplete="on">
+            <form name="eventForm" ng-submit="submitForm()" autocomplete="on">
                 <md-card-content>
                     <div layout-gt-sm="row">
                         <md-input-container>
@@ -36,14 +36,13 @@
                             <label for="startdate">Start Date/Time</label>
                             <input mdc-datetime-picker="" date="true" time="true" type="text"
                                    placeholder="Start" max-date="dateTimeEnd" ng-model="event.dateTimeStart"
-                                   class=" md-input"
-                                   id="startdate">
+                                   class=" md-input" id="startdate" required>
                         </md-input-container>
                         <md-input-container class="md-input-has-placeholder">
                             <label for="enddate" >End Date/Time</label>
                             <input mdc-datetime-picker="" date="true" time="true" type="text"
                                    placeholder="End" min-date="event.dateTimeStart" ng-model="event.dateTimeEnd"
-                                   class=" md-input" id="enddate">
+                                   class=" md-input" id="enddate" required>
                         </md-input-container>
                     </div>
 
@@ -60,7 +59,7 @@
                     <div layout-gt-sm="row">
                         <md-input-container class="md-block" flex-gt-sm="">
                             <label for="city" >City</label>
-                            <input id="city" ng-model="event.location.city">
+                            <input id="city" ng-model="event.location.city" required>
                         </md-input-container>
 
                         <md-input-container class="md-block" flex-gt-sm="">
@@ -79,7 +78,7 @@
                     </md-input-container>
                 </md-card-content>
                 <md-card-actions layout="row" layout-align="start center">
-                    <md-button type="submit" ng-click="submitForm()">Save</md-button>
+                    <md-button type="submit">Save</md-button>
                     <md-button type="reset" ng-href="#/events">Cancel</md-button>
                 </md-card-actions>
             </form>
