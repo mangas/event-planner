@@ -7,12 +7,26 @@ angular.module('EventPlanner', [
         'EventPlanner.events',
         'ngMaterial',
         'ngMessages',
-        'ngMaterialDatePicker'
+        'mdPickers'
     ])
 
     .config(['$routeProvider', function ($routeProvider) {
         $routeProvider.otherwise({redirectTo: '/users'});
 
+    }])
+
+    .directive('focusThis', [ '$timeout', function($timeout){
+        return {
+            link: function(scope, element, attrs) {
+                scope.$watch(attrs.focusThis, function() {
+                    $timeout(function() {
+                        console.debug('Focusing '+element[0].id);
+                        angular.element(element[0]).focus();
+                    // Seems that without this delay the focus is stolen
+                    }, 100);
+                });
+            }
+        }
     }])
 
     .controller('appCtrl', ['$scope', '$mdSidenav', '$mdToast', function ($scope, $mdSidenav, $mdToast) {
@@ -46,4 +60,4 @@ angular.module('EventPlanner', [
         $scope.refresh = function () {
             location.reload(true);
         }
-    })
+    });

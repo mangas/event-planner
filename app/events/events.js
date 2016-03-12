@@ -5,18 +5,18 @@ const NEW_EVENT_URL = '/events/new';
 
 angular.module('EventPlanner.events', ['ngRoute', 'ngMaterial', 'ngMessages'])
 
-    .config(['$routeProvider', '$mdThemingProvider', function ($routeProvider, $mdThemingProvider) {
+    .config(['$routeProvider', function ($routeProvider) {
         $routeProvider.when('/events', {
             templateUrl: 'events/events.html',
             controller: 'EventsCtrl'
         });
         $routeProvider.when('/events/new', {
             templateUrl: 'events/newevent.html',
-            controller: 'EventsCtrl'
+            controller: 'NewEventsCtrl'
         });
         $routeProvider.when('/events/edit/:id', {
             templateUrl: 'events/newevent.html',
-            controller: 'EventsCtrl'
+            controller: 'NewEventsCtrl'
         });
         $routeProvider.when('/events/guests/:id', {
             templateUrl: 'events/guests.html',
@@ -62,11 +62,16 @@ angular.module('EventPlanner.events', ['ngRoute', 'ngMaterial', 'ngMessages'])
         };
         self.Event = Event;
 
-        self.getIdAndIncrement = function() {
+        self.getIdAndIncrement = function () {
             var id = self.latest_id++;
             if (self.storage)
                 self.storage.setItem(self.EVENT_ID_KEY, self.latest_id);
             return id;
+        };
+
+        Event.formats = {
+            time: "HH:mm Z",
+            date: "DD/MM/YYYY"
         };
 
         Event.prototype.updateFromEvent = function (event) {
@@ -146,9 +151,15 @@ angular.module('EventPlanner.events', ['ngRoute', 'ngMaterial', 'ngMessages'])
         return self;
     }])
 
-    .controller('EventsCtrl', ['$scope', 'eventService', '$window', '$routeParams', function ($scope, eventService, $window, $routeParams) {
+    .controller('EventsCtrl', ['$scope', 'eventService', function ($scope, eventService) {
+
         $scope.events = eventService.events;
         $scope.deleteEvent = eventService.removeEvent;
+    }])
+
+    .controller('NewEventsCtrl', ['$scope', 'eventService', '$window', '$routeParams', function ($scope, eventService, $window, $routeParams) {
+
+        $scope.formats = eventService.Event.formats;
 
         $scope.isEdit = function () {
             return !!$routeParams.id;
@@ -165,7 +176,26 @@ angular.module('EventPlanner.events', ['ngRoute', 'ngMaterial', 'ngMessages'])
         else
             $scope.event = null;
 
+
         $scope.eventTypes = eventService.Event.eventTypes;
+        $scope.verifyDates = function() {
+            var dateStart = $scope.event.dateStart;
+            var timeStart = $scope.event.timeStart;
+            var dateEnd = $scope.event.dateEnd;
+            var timeEnd = $scope.event.timeEnd;
+
+            if (!(dateStart && dateEnd && timeStart && timeEnd))
+                return;
+
+            var startMoment = moment(dateStart+' '+timeStart,
+                eventService.Event.formats.date+' '+eventService.Event.formats.time);
+            var endMoment = moment(dateEnd+' '+timeEnd,
+                eventService.Event.formats.date+' '+eventService.Event.formats.time);
+
+            var endAfterStart = endMoment.isAfter(startMoment);
+            console.debug(endAfterStart);
+            $scope.eventForm.endtime.$setValidity('after', endAfterStart)
+        };
 
         $scope.submitForm = function () {
             if ($scope.isEdit()) {
@@ -187,9 +217,10 @@ angular.module('EventPlanner.events', ['ngRoute', 'ngMaterial', 'ngMessages'])
             }
 
             $window.location.href = eventService.LIST_EVENTS_URL
-        }
+        };
 
     }])
+
     .controller('GuestsCtrl', ['eventService', '$window', '$routeParams', '$scope', function (eventService, $window, $routeParams, $scope) {
         if ($routeParams.id)
             var event = eventService.getEventById($routeParams.id);

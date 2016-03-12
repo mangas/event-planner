@@ -16,76 +16,74 @@
     <link rel="import" href="elements.html">
     <script src="bower_components/webcomponentsjs/webcomponents-lite.min.js"></script>
 </head>
-<body ng-app="EventPlanner" layout="column" ng-controller="appCtrl">
+<body ng-app="EventPlanner" layout="column">
 
 <!--[if lt IE 7]>
 <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade
     your browser</a> to improve your experience.</p>
 <![endif]-->
 
-<md-toolbar layout="row">
-    <md-toolbar class="md-toolbar-tools">
-            <md-button class="md-icon-button" aria-label="Menu" ng-click="toggle()">
-                <md-icon md-font-library="material-icons">menu</md-icon>
-            </md-button>
-            <h1>
-                <span>Worst Event Planning App Ever</span>
-            </h1>
-            <span flex></span>
-            <md-menu ng-click="$mdOpenMenu($event)" ng-if="storageSupported">
-                <md-button ng-click="ctrl.openMenu($mdOpenMenu, $event)">
-                    <md-icon md-font-library="material-icons">more_vert</md-icon>
+<md-toolbar class="md-toolbar-tools" layout="row" ng-controller="appCtrl">
+    <!--
+        This will steal focus when on a small device on sidenav close but should be fixed in future versions of Angular-Material
+        https://github.com/angular/material/issues/5563
+    -->
+    <md-button class="md-icon-button" aria-label="Menu" ng-click="toggle()" md-no-focus-style="">
+        <md-icon md-font-library="material-icons">menu</md-icon>
+    </md-button>
+    <h1>
+        <span>Worst Event Planning App Ever</span>
+    </h1>
+    <span flex></span>
+    <md-menu ng-click="$mdOpenMenu($event)" ng-if="storageSupported">
+        <md-button ng-click="ctrl.openMenu($mdOpenMenu, $event)">
+            <md-icon md-font-library="material-icons">more_vert</md-icon>
+        </md-button>
+        <md-menu-content width="4">
+            <md-menu-item>
+                <md-button ng-click="clearStorage();openToast()">
+                    <md-icon md-font-library="material-icons">clear</md-icon>
+                    Clear Cache
                 </md-button>
-                <md-menu-content width="4">
-                    <md-menu-item>
-                        <md-button ng-click="clearStorage();openToast()">
-                            <md-icon md-font-library="material-icons">clear</md-icon>
-                            Clear Cache
-                        </md-button>
-                    </md-menu-item>
-                </md-menu-content>
-            </md-menu>
-    </md-toolbar>
-
+            </md-menu-item>
+        </md-menu-content>
+    </md-menu>
 </md-toolbar>
 
-<div flex layout="row">
-    <md-sidenav md-component-id='sidenav' md-is-locked-open="$mdMedia('gt-sm')" class="md-whiteframe-z2">
-        <md-list ng-click="toggle()">
 
-            <md-list-item>
-                <md-button href="#/events">
-                <md-icon md-font-library="material-icons">event</md-icon>
+<div layout="row">
+    <section layout="row" ng-controller="appCtrl">
+        <md-sidenav md-component-id='sidenav' nofocus tabindex="100" md-is-locked-open="$mdMedia('gt-sm')"
+                    class="md-whiteframe-z2">
+
+            <md-content ng-click="toggle()" layout="column" layout-align="left">
+                <md-button ng-href="#/events" md-no-focus>
+                    <md-icon md-font-library="material-icons">event</md-icon>
                     Events
                 </md-button>
-            </md-list-item>
 
-            <md-list-item>
-                <md-button href="#/events/new">
+                <md-button ng-href="#/events/new" md-no-focus>
                     <md-icon md-font-library="material-icons">plus_one</md-icon>
                     Register Event
                 </md-button>
-            </md-list-item>
 
-            <md-list-item>
-                <md-button href="#/users">
+                <md-button ng-href="#/users" md-no-focus>
                     <md-icon md-font-library="material-icons">people</md-icon>
                     Users
                 </md-button>
-            </md-list-item>
 
-            <md-list-item>
-                <md-button href="#/users/new">
+                <md-button ng-href="#/users/new" md-no-focus>
                     <md-icon md-font-library="material-icons">plus_one</md-icon>
                     Register User
                 </md-button>
-            </md-list-item>
 
-        </md-list>
-    </md-sidenav>
+            </md-content>
+        </md-sidenav>
+    </section>
 
-    <div class="md-primary" flex ng-view id="content"></div>
+    <div flex tabindex="-1" layout="row" class="md-primary" flex ng-view id="content">
 
+    </div>
 </div>
 
 <script src="bower_components/angular/angular.js"></script>
@@ -96,7 +94,7 @@
 <script src="bower_components/angular-messages/angular-messages.js" type="text/javascript"></script>
 <script src="bower_components/jshashes/hashes.js"></script>
 <script src="bower_components/momentjs/moment.js"></script>
-<script src="bower_components/angular-material-datetimepicker/js/angular-material-datetimepicker.min.js"></script>
+<script src="bower_components/mdPickers/dist/mdPickers.js" type="text/javascript"></script>
 
 <script src="app.js"></script>
 <script src="users/users.js"></script>

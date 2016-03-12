@@ -12,11 +12,11 @@ angular.module('EventPlanner.users', ['ngRoute'])
         });
         $routeProvider.when('/users/new', {
             templateUrl: 'users/newuser.html',
-            controller: 'UsersCtrl'
+            controller: 'NewUsersCtrl'
         });
         $routeProvider.when('/users/edit/:email', {
             templateUrl: 'users/newuser.html',
-            controller: 'UsersCtrl'
+            controller: 'NewUsersCtrl'
         });
     }])
     .factory('userService', [function () {
@@ -102,9 +102,15 @@ angular.module('EventPlanner.users', ['ngRoute'])
 
     }])
 
-    .controller('UsersCtrl', ['$scope', 'userService', '$window', '$routeParams', function ($scope, userService, $window, $routeParams) {
+    .controller('UsersCtrl', ['$scope', 'userService', function ($scope, userService) {
 
         $scope.users = userService.users;
+        $scope.deleteUser = userService.removeUser;
+
+    }])
+
+    .controller('NewUsersCtrl', ['$scope', 'userService', '$window', '$routeParams', function ($scope, userService, $window, $routeParams) {
+
         $scope.isEdit = function () {
             return !!$routeParams.email
         };
@@ -119,8 +125,6 @@ angular.module('EventPlanner.users', ['ngRoute'])
         }
         else
             $scope.user = null;
-
-        $scope.deleteUser = userService.removeUser;
 
         $scope.verifyPassword = function () {
 
@@ -213,3 +217,4 @@ angular.module('EventPlanner.users', ['ngRoute'])
 
 
     }]);
+
