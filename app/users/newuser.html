@@ -25,7 +25,15 @@
                     <div layout-gt-sm="row">
                         <md-input-container>
                             <label for="email">Email</label>
-                            <input id="email" type="email" ng-model="user.email" required/>
+                            <!--
+                                Pattern necessary due to bug in validation, should be fixed in the future
+                            -->
+                            <input id="email" type="email" ng-model="user.email" required name="email"
+                                   pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,63}$"
+                            />
+                            <div ng-messages="userForm.email.$error" ng-show="userForm.email.$dirty">
+                                <div ng-message="pattern">Please correct your email address</div>
+                            </div>
                         </md-input-container>
                     </div>
 
@@ -36,28 +44,31 @@
                                    ng-change="verifyPassword()"
                                    required/>
                             <div ng-messages="userForm.password.$error" ng-show="userForm.password.$dirty">
-                                <div ng-message="match">The passwords do not match</div>
                                 <div ng-message="symbol">Password doesnt have a symbol</div>
                                 <div ng-message="number">Password needs at least a number</div>
                                 <div ng-message="lowercase">Please add some lowercase characters</div>
                                 <div ng-message="uppercase">Please add some uppercase characters</div>
                                 <div ng-message="minLength">The minimum length was not met</div>
                                 <div ng-message="maxLength">Password exceeds the maximum length</div>
+                                <div ng-message="match">The passwords do not match</div>
                             </div>
                         </md-input-container>
                         <md-input-container>
                             <label for="password2">Repeat Password</label>
                             <input name="cpassword" ng-model="user.cpassword" type="password"
                                    id="password2" ng-change="verifyPassword()" required/>
+                            <div ng-messages="userForm.cpassword.$error" ng-show="userForm.cpassword.$dirty">
+                                <div ng-message="match">The passwords do not match</div>
+                            </div>
                         </md-input-container>
                     </div>
 
-                    <dev layout="row">
+                    <dev layout-gt-sm="row">
                         <md-input-container class="md-input-has-placeholder">
                             <label for="birthday">Birthday (Optional)</label>
                             <input mdp-date-picker type="date" id="birthday"
                                    ng-model="user.details.birthday" format="{{formats.date}}"
-                                   required name="birthday" placeholder="Birthday"
+                                   name="birthday" placeholder="Birthday"
                                    max="Date.today()" class="md-input"
                             />
                         </md-input-container>

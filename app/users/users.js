@@ -208,7 +208,10 @@ angular.module('EventPlanner.users', ['ngRoute'])
 
             var setValidity = function (checks, value) {
                 checks.forEach(function (ctr) {
-                    $scope.userForm.password.$setValidity(ctr, value);
+                    if (ctr === 'match')
+                        $scope.userForm.cpassword.$setValidity(ctr, value);
+                    else
+                        $scope.userForm.password.$setValidity(ctr, value);
                 });
             };
 

@@ -10,6 +10,7 @@
     "gulp-rename": "^1.2.2",
     "gulp-uglify": "^1.5.3",
     "gulp-watch": "^4.3.5",
+    "gulp-webserver": "^0.9.1",
     "http-server": "^0.6.1",
     "jasmine-core": "^2.3.4",
     "karma": "~0.12",
@@ -22,8 +23,8 @@
   },
   "scripts": {
     "postinstall": "bower install",
-    "prestart": "npm install",
-    "start": "http-server app -a localhost -p 8000 -c-1",
+    "prestart": "npm install; gulp",
+    "start": "gulp",
     "pretest": "npm install",
     "test": "karma start karma.conf.js",
     "test-single-run": "karma start karma.conf.js  --single-run",
