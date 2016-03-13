@@ -15,14 +15,14 @@ angular.module('EventPlanner', [
 
     }])
 
-    .directive('focusThis', [ '$timeout', function($timeout){
+    .directive('focusThis', ['$timeout', function ($timeout) {
         return {
-            link: function(scope, element, attrs) {
-                scope.$watch(attrs.focusThis, function() {
-                    $timeout(function() {
-                        console.debug('Focusing '+element[0].id);
+            link: function (scope, element, attrs) {
+                scope.$watch(attrs.focusThis, function () {
+                    $timeout(function () {
+                        console.debug('Focusing ' + element[0].id);
                         angular.element(element[0]).focus();
-                    // Seems that without this delay the focus is stolen
+                        // Seems that without this delay the focus is stolen
                     }, 100);
                 });
             }

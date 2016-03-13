@@ -12,28 +12,29 @@
                 <md-card-content>
                     <div layout-gt-sm="row">
                         <md-input-container>
-                            <label for="firstname" >First Name</label>
-                            <input id="firstname" type="text" ng-model="user.firstName" focus-this required />
+                            <label for="firstname">First Name</label>
+                            <input id="firstname" type="text" ng-model="user.firstName" focus-this required/>
                         </md-input-container>
 
                         <md-input-container>
-                            <label for="lastname" >Last Name</label>
-                            <input id="lastname" type="text" ng-model="user.lastName" required />
+                            <label for="lastname">Last Name</label>
+                            <input id="lastname" type="text" ng-model="user.lastName" required/>
                         </md-input-container>
                     </div>
 
-                    <div layout-gt-xs="row">
+                    <div layout-gt-sm="row">
                         <md-input-container>
-                            <label for="email" >Email</label>
-                            <input id="email" type="email" ng-model="user.email" required />
+                            <label for="email">Email</label>
+                            <input id="email" type="email" ng-model="user.email" required/>
                         </md-input-container>
                     </div>
 
-                    <div layout-gt-xs="row" ng-if="!isEdit()">
+                    <div layout-gt-sm="row" ng-if="!isEdit()">
                         <md-input-container>
                             <label for="password">Password</label>
-                            <input id="password" name="password" ng-model="user.password" type="password" ng-change="verifyPassword()"
-                                   required />
+                            <input id="password" name="password" ng-model="user.password" type="password"
+                                   ng-change="verifyPassword()"
+                                   required/>
                             <div ng-messages="userForm.password.$error" ng-show="userForm.password.$dirty">
                                 <div ng-message="match">The passwords do not match</div>
                                 <div ng-message="symbol">Password doesnt have a symbol</div>
@@ -47,25 +48,27 @@
                         <md-input-container>
                             <label for="password2">Repeat Password</label>
                             <input name="cpassword" ng-model="user.cpassword" type="password"
-                                   id="password2" ng-change="verifyPassword()" required />
+                                   id="password2" ng-change="verifyPassword()" required/>
                         </md-input-container>
                     </div>
 
                     <dev layout="row">
                         <md-input-container class="md-input-has-placeholder">
-                            <label for="birthday" >Birthday (Optional)</label>
-                            <input mdc-datetime-picker="" date="true" time="false" type="text"
-                                   placeholder="Birthday" max-date="Date.today()" ng-model="user.details.birthday"
-                                   format="YYYY-MM-DD" class=" md-input" type="datetime" id="birthday" />
+                            <label for="birthday">Birthday (Optional)</label>
+                            <input mdp-date-picker type="date" id="birthday"
+                                   ng-model="user.details.birthday" format="{{formats.date}}"
+                                   required name="birthday" placeholder="Birthday"
+                                   max="Date.today()" class="md-input"
+                            />
                         </md-input-container>
 
                         <md-input-container>
-                            <label for="jobtitle" >Job Title (Optional)</label>
-                            <input type="text" id="jobtitle" ng-model="user.details.jobTitle" />
+                            <label for="jobtitle">Job Title (Optional)</label>
+                            <input type="text" id="jobtitle" ng-model="user.details.jobTitle"/>
                         </md-input-container>
                         <md-input-container>
                             <label for="employer">Employer (Optional)</label>
-                            <input type="text" id="employer" ng-model="user.details.employer" />
+                            <input type="text" id="employer" ng-model="user.details.employer"/>
                         </md-input-container>
                     </dev>
                 </md-card-content>

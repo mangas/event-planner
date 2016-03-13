@@ -38,18 +38,8 @@ angular.module('EventPlanner.events', ['ngRoute', 'ngMaterial', 'ngMessages'])
         self.EVENTS_KEY = 'EVENTS';
         self.EVENT_ID_KEY = 'EVENT_ID';
 
-        if (self.storage) {
-            if (self.storage.key(self.EVENTS_KEY))
-                self.events = JSON.parse(self.storage.getItem(self.EVENTS_KEY));
-            if (self.storage.key(self.EVENT_ID_KEY))
-                self.latest_id = JSON.parse(self.storage.getItem(self.EVENT_ID_KEY));
-            else
-                self.latest_id = 0;
-        } else
-            console.warn('No localStorage available');
-
         var Event = function (eventName, eventType, eventHost, dateTimeStart, dateTimeEnd, guests, location, message) {
-            Event.id = Event.id || 0
+            Event.id = Event.id || 0;
             this.id = self.getIdAndIncrement();
             this.name = eventName;
             this.type = eventType;
@@ -70,8 +60,23 @@ angular.module('EventPlanner.events', ['ngRoute', 'ngMaterial', 'ngMessages'])
         };
 
         Event.formats = {
-            time: "HH:mm Z",
+            time: "HH:MM Z",
             date: "DD/MM/YYYY"
+        };
+
+        Event.eventTypes = ['Birthday Party', 'Conference Talk', 'Wedding'];
+
+        Event.fromObject = function (obj) {
+            return new Event(
+                obj.name,
+                obj.type,
+                obj.host,
+                obj.dateTimeStart,
+                obj.dateTimeEnd,
+                obj.guests,
+                obj.location,
+                obj.message
+            );
         };
 
         Event.prototype.updateFromEvent = function (event) {
@@ -85,6 +90,33 @@ angular.module('EventPlanner.events', ['ngRoute', 'ngMaterial', 'ngMessages'])
             this.message = event.message;
         };
 
+        Event.prototype.getStartDateString = function () {
+            return moment(this.dateTimeStart).format(Event.formats.date + ' ' + Event.formats.time)
+        };
+
+        Event.prototype.getEndDateString = function () {
+            return moment(this.dateTimeEnd).format(Event.formats.date + ' ' + Event.formats.time)
+        };
+
+        if (self.storage) {
+
+            if (self.storage.key(self.EVENT_ID_KEY))
+                self.latest_id = JSON.parse(self.storage.getItem(self.EVENT_ID_KEY));
+            else
+                self.latest_id = 0;
+
+            if (self.storage.key(self.EVENTS_KEY)) {
+                var jsonEvents = JSON.parse(self.storage.getItem(self.EVENTS_KEY));
+
+                if (jsonEvents)
+                    self.events = jsonEvents.map(function (event) {
+                        return new Event.fromObject(event);
+                    });
+            }
+            ;
+        } else
+            console.warn('No localStorage available');
+
 
         if (!self.events)
             self.events = [
@@ -92,8 +124,8 @@ angular.module('EventPlanner.events', ['ngRoute', 'ngMaterial', 'ngMessages'])
                     "Another event",
                     'Another Type',
                     "AnHost",
-                    new Date('2016-03-06T15:35:00.991Z'),
-                    new Date('2016-03-06T15:40:00.300Z'),
+                    new Date('2016-03-06T15:35:00.991Z').getTime(),
+                    new Date('2016-03-06T15:40:00.300Z').getTime(),
                     [],
                     {
                         address1: "Here",
@@ -106,8 +138,8 @@ angular.module('EventPlanner.events', ['ngRoute', 'ngMaterial', 'ngMessages'])
                     'An Event',
                     'One Type',
                     'Myself',
-                    new Date('2016-03-06T15:35:00.991Z'),
-                    new Date('2016-03-06T15:40:00.300Z'),
+                    new Date('2016-03-06T15:35:00.991Z').getTime(),
+                    new Date('2016-03-06T15:40:00.300Z').getTime(),
                     [],
                     {
                         address1: "There",
@@ -117,8 +149,6 @@ angular.module('EventPlanner.events', ['ngRoute', 'ngMaterial', 'ngMessages'])
                     'Yes please'
                 )
             ];
-
-        Event.eventTypes = ['Birthday Party', 'Conference Talk', 'Wedding'];
 
         self.addEvent = function (event) {
             self.events.push(event);
@@ -167,8 +197,14 @@ angular.module('EventPlanner.events', ['ngRoute', 'ngMaterial', 'ngMessages'])
 
         if ($scope.isEdit()) {
             var formEvent = eventService.getEventById($routeParams.id);
-            if (formEvent)
+            if (formEvent) {
                 $scope.event = angular.copy(formEvent);
+                $scope.event.dateStart = new Date(moment(formEvent.dateTimeStart).format(eventService.Event.formats.date));
+                $scope.event.timeStart = new Date(moment(formEvent.dateTimeStart).format(eventService.Event.formats.date + ' ' + eventService.Event.formats.time));
+                $scope.event.dateEnd = new Date(moment(formEvent.dateTimeEnd).format(eventService.Event.formats.date));
+                $scope.event.timeEnd = new Date(moment(formEvent.dateTimeEnd).format(eventService.Event.formats.date + ' ' + eventService.Event.formats.time));
+            }
+
             else
             // Trying to edit a non-existent Event
                 $window.location.href = eventService.LIST_EVENTS_URL
@@ -178,7 +214,28 @@ angular.module('EventPlanner.events', ['ngRoute', 'ngMaterial', 'ngMessages'])
 
 
         $scope.eventTypes = eventService.Event.eventTypes;
-        $scope.verifyDates = function() {
+
+        var getStartDate = function () {
+            var dateStart = angular.copy($scope.event.dateStart);
+            var timeStart = angular.copy($scope.event.timeStart);
+
+            dateStart.setHours(timeStart.getHours());
+            dateStart.setMinutes(timeStart.getMinutes());
+
+            return dateStart;
+        };
+
+        var getEndDate = function () {
+            var dateEnd = angular.copy($scope.event.dateEnd);
+            var timeEnd = angular.copy($scope.event.timeEnd);
+
+            dateEnd.setHours(timeEnd.getHours());
+            dateEnd.setMinutes(timeEnd.getMinutes());
+
+            return dateEnd;
+        }
+
+        $scope.verifyDates = function () {
             var dateStart = $scope.event.dateStart;
             var timeStart = $scope.event.timeStart;
             var dateEnd = $scope.event.dateEnd;
@@ -187,32 +244,37 @@ angular.module('EventPlanner.events', ['ngRoute', 'ngMaterial', 'ngMessages'])
             if (!(dateStart && dateEnd && timeStart && timeEnd))
                 return;
 
-            var startMoment = moment(dateStart+' '+timeStart,
-                eventService.Event.formats.date+' '+eventService.Event.formats.time);
-            var endMoment = moment(dateEnd+' '+timeEnd,
-                eventService.Event.formats.date+' '+eventService.Event.formats.time);
+            var startMoment = moment(getStartDate().getTime());
+            var endMoment = moment(getEndDate().getTime());
 
-            var endAfterStart = endMoment.isAfter(startMoment);
-            console.debug(endAfterStart);
+            $scope.eventForm.endtime.$setValidity('startvalid', startMoment.isValid());
+            $scope.eventForm.endtime.$setValidity('endvalid', endMoment.isValid());
+            var endAfterStart = startMoment.isValid() && endMoment.isValid() && endMoment.isAfter(startMoment);
             $scope.eventForm.endtime.$setValidity('after', endAfterStart)
+
+            return endAfterStart;
         };
 
         $scope.submitForm = function () {
+            if (!$scope.verifyDates())
+                return;
+
+            var event = new eventService.Event(
+                $scope.event.name,
+                $scope.event.type,
+                $scope.event.host,
+                getStartDate().getTime(),
+                getEndDate().getTime(),
+                [],
+                $scope.event.location,
+                $scope.event.message
+            );
+
             if ($scope.isEdit()) {
-                eventService.getEventById($routeParams.id).updateFromEvent($scope.event);
+                eventService.getEventById($routeParams.id).updateFromEvent(event);
                 eventService.updateEvents();
             }
             else {
-                var event = new eventService.Event(
-                    $scope.event.name,
-                    $scope.event.type,
-                    $scope.event.host,
-                    $scope.event.dateTimeStart,
-                    $scope.event.dateTimeEnd,
-                    [],
-                    $scope.location,
-                    $scope.event.message
-                );
                 eventService.addEvent(event);
             }
 

@@ -12,7 +12,7 @@
                     <span class="md-subhead">{{item.type}}</span>
                 </md-card-header-text>
             </md-card-header>
-            <div layout="row" >
+            <div layout="row">
                 <md-card-content layout="column">
                     <b>Host:</b>
                     <p>{{item.host}}</p>
@@ -24,15 +24,15 @@
             </div>
             <md-card-content layout="column">
                 <b>From:</b>
-                <p>{{item.dateTimeStart.toGMTString()}}</p>
+                <p>{{ item.getStartDateString() }}</p>
                 <b>To:</b>
-                <p>{{item.dateTimeEnd.toGMTString()}}</p>
+                <p>{{ item.getEndDateString() }}</p>
             </md-card-content>
             <md-card-content layout="column">
                 <b>Location:</b>
                 <p>{{item.location.address1}}</p>
                 <p ng-if="item.location.address2">{{item.location.address2}}</p>
-                <p>{{item.location.postCode}} {{item.location.city}}</p>
+                <p>{{item.location.postalCode}} {{item.location.city}}</p>
             </md-card-content>
             <md-card-footer ng-if="item.message">
                 <b>Information:</b>

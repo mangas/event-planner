@@ -15,7 +15,7 @@
             <md-card-content ng-if="item.details" layout="column">
                 <div ng-if="item.details.birthday">
                     <b>Birthday:</b>
-                    <p>{{item.details.birthday.toDateString()}}</p>
+                    <p>{{item.getBirthdayString()}}</p>
                 </div>
                 <div ng-if="item.details.jobTitle">
                     <b>Job Title:</b>

@@ -36,6 +36,16 @@ angular.module('EventPlanner.users', ['ngRoute'])
             this.details = details;
         };
 
+        User.fromObject = function (obj) {
+            return new User(
+                obj.firstName,
+                obj.lastName,
+                obj.email,
+                obj.password,
+                obj.details
+            );
+        };
+
         self.User = User;
 
         User.prototype.getName = function () {
@@ -50,12 +60,27 @@ angular.module('EventPlanner.users', ['ngRoute'])
             this.details = user.details;
         };
 
+        User.formats = {
+            date: "DD/MM/YYYY"
+        };
+
+        User.prototype.getBirthdayString = function () {
+            if (this.details.birthday)
+                return moment(this.details.birthday).format(User.formats.date)
+        };
+
         //User Storage
         self.storage = window.localStorage;
 
         if (self.storage) {
-            if (self.storage.key(self.USERS_KEY))
-                self.users = JSON.parse(self.storage.getItem(self.USERS_KEY));
+            if (self.storage.key(self.USERS_KEY)) {
+                var jsonusers = JSON.parse(self.storage.getItem(self.USERS_KEY));
+                if (jsonusers)
+                    self.users = jsonusers.map(function (obj) {
+                        return User.fromObject(obj);
+                    });
+            }
+
         } else
             console.warn('No localStorage available');
 
@@ -117,14 +142,20 @@ angular.module('EventPlanner.users', ['ngRoute'])
 
         if ($scope.isEdit()) {
             var formUser = userService.getUserByEmail($routeParams.email);
-            if (formUser)
+            if (formUser) {
                 $scope.user = angular.copy(formUser);
+                if (formUser.details && formUser.details.birthday)
+                    $scope.user.details.birthday = moment(formUser.details.birthday).toDate();
+            }
+
             else
             // Trying to edit a non-existent user
                 $window.location.href = userService.LIST_USERS_URL
         }
         else
             $scope.user = null;
+
+        $scope.formats = userService.User.formats;
 
         $scope.verifyPassword = function () {
 
@@ -198,7 +229,10 @@ angular.module('EventPlanner.users', ['ngRoute'])
         $scope.submitForm = function () {
 
             if ($scope.isEdit()) {
-                userService.getUserByEmail($routeParams.email).updateFromUser($scope.user);
+                var usr = angular.copy($scope.user);
+                if (usr.details && usr.details.birthday)
+                    usr.details.birthday = usr.details.birthday.getTime();
+                userService.getUserByEmail($routeParams.email).updateFromUser(usr);
                 userService.updateUsers();
             }
 
