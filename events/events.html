@@ -1,0 +1,48 @@
+<md-content layout="row" layout-wrap>
+    <md-card flex="100" layout-padding="">
+        <md-card-header-text>
+            <span class="md-title">Event Details</span>
+        </md-card-header-text>
+    </md-card>
+    <div flex-xs flex-gt-xs="50" layout="column" ng-repeat="item in events">
+        <md-card>
+            <md-card-header>
+                <md-card-header-text>
+                    <span class="md-title">{{item.name}}</span>
+                    <span class="md-subhead">{{item.type}}</span>
+                </md-card-header-text>
+            </md-card-header>
+            <div layout="row">
+                <md-card-content layout="column">
+                    <b>Host:</b>
+                    <p>{{item.host}}</p>
+                </md-card-content>
+                <md-card-content layout="column">
+                    <b>Guests:</b>
+                    <p>{{item.guests.length}}</p>
+                </md-card-content>
+            </div>
+            <md-card-content layout="column">
+                <b>From:</b>
+                <p>{{ item.getStartDateString() }}</p>
+                <b>To:</b>
+                <p>{{ item.getEndDateString() }}</p>
+            </md-card-content>
+            <md-card-content layout="column">
+                <b>Location:</b>
+                <p>{{item.location.address1}}</p>
+                <p ng-if="item.location.address2">{{item.location.address2}}</p>
+                <p>{{item.location.postalCode}} {{item.location.city}}</p>
+            </md-card-content>
+            <md-card-footer ng-if="item.message">
+                <b>Information:</b>
+                <p>{{item.message}}</p>
+            </md-card-footer>
+            <md-card-actions layout="row" layout-align="start center">
+                <md-button ng-click="deleteEvent(item)">Delete</md-button>
+                <md-button ng-href="#/events/edit/{{item.id}}">Edit</md-button>
+                <md-button ng-href="#/events/guests/{{item.id}}">Guests</md-button>
+            </md-card-actions>
+        </md-card>
+    </div>
+</md-content>
